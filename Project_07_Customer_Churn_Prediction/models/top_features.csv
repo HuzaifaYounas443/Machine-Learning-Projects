@@ -1,0 +1,11 @@
+Feature,Importance
+tenure,0.19339999118315077
+TotalCharges,0.15665500550567701
+MonthlyCharges,0.10408445100679761
+Contract_Two year,0.09379496284990295
+InternetService_Fiber optic,0.08738451728405708
+PaymentMethod_Electronic check,0.049491009652008616
+Contract_One year,0.039016583309589556
+OnlineSecurity_Yes,0.03154872278452857
+TechSupport_Yes,0.02391676918383512
+PaperlessBilling_Yes,0.019613230892074236
