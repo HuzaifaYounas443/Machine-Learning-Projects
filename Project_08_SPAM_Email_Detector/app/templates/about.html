@@ -1,0 +1,176 @@
+<!-- app/templates/about.html -->
+{% extends "base.html" %}
+
+{% block title %}About - Spam Detector{% endblock %}
+
+{% block content %}
+<div class="about-section">
+    <div class="container">
+        <h1 class="about-title">About This Project</h1>
+        
+        <div class="about-grid">
+            <div class="about-card">
+                <div class="about-icon">🧠</div>
+                <h3>How It Works</h3>
+                <p>Our spam detector uses Natural Language Processing (NLP) and Machine Learning to analyze messages in real-time.</p>
+                <ul class="about-list">
+                    <li>Text cleaning and preprocessing</li>
+                    <li>TF-IDF feature extraction</li>
+                    <li>Logistic Regression classification</li>
+                </ul>
+            </div>
+            
+            <div class="about-card">
+                <div class="about-icon">📊</div>
+                <h3>Model Performance</h3>
+                <div class="performance-stats">
+                    <div class="perf-item">
+                        <span class="perf-label">Accuracy</span>
+                        <span class="perf-value">98.5%</span>
+                    </div>
+                    <div class="perf-item">
+                        <span class="perf-label">Precision</span>
+                        <span class="perf-value">98.0%</span>
+                    </div>
+                    <div class="perf-item">
+                        <span class="perf-label">Recall</span>
+                        <span class="perf-value">95.0%</span>
+                    </div>
+                    <div class="perf-item">
+                        <span class="perf-label">F1-Score</span>
+                        <span class="perf-value">96.5%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="about-card">
+                <div class="about-icon">🔧</div>
+                <h3>Technologies</h3>
+                <ul class="about-list">
+                    <li>Python &amp; Flask</li>
+                    <li>Scikit-learn</li>
+                    <li>TF-IDF Vectorization</li>
+                    <li>Streamlit (Prototype)</li>
+                    <li>HTML5 &amp; CSS3</li>
+                </ul>
+            </div>
+            
+            <div class="about-card">
+                <div class="about-icon">📚</div>
+                <h3>Dataset</h3>
+                <p>Trained on the <strong>SMS Spam Collection</strong> dataset with over 5,500 real messages.</p>
+                <ul class="about-list">
+                    <li>5,574 messages</li>
+                    <li>13.4% spam</li>
+                    <li>86.6% ham</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.about-section {
+    padding: 60px 0;
+}
+
+.about-title {
+    font-size: 40px;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 40px;
+    background: linear-gradient(135deg, #FF4B4B, #FF6B6B);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.about-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    padding: 32px;
+    transition: all 0.3s ease;
+}
+
+.about-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-4px);
+}
+
+.about-icon {
+    font-size: 40px;
+    margin-bottom: 16px;
+}
+
+.about-card h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.about-card p {
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.about-list {
+    list-style: none;
+    padding: 0;
+}
+
+.about-list li {
+    color: rgba(255, 255, 255, 0.5);
+    padding: 6px 0;
+    padding-left: 20px;
+    position: relative;
+}
+
+.about-list li::before {
+    content: "▸";
+    position: absolute;
+    left: 0;
+    color: #FF4B4B;
+}
+
+.performance-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.perf-item {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.perf-label {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.perf-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #00CC96;
+}
+
+@media (max-width: 768px) {
+    .about-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}

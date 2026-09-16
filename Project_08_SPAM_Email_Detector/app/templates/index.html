@@ -1,0 +1,217 @@
+<!-- app/templates/index.html -->
+{% extends "base.html" %}
+
+{% block title %}Spam Detector - Check Your Messages{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <div class="hero-content">
+            <div class="hero-text">
+                <span class="hero-badge">
+                    <i class="fas fa-robot"></i> AI-Powered
+                </span>
+                <h1 class="hero-title">
+                    Instantly Detect<br>
+                    <span class="gradient-text">Spam Messages</span>
+                </h1>
+                <p class="hero-description">
+                    Protect yourself from phishing, scams, and unwanted messages.
+                    Our AI model analyzes your messages in real-time.
+                </p>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">98%</span>
+                        <span class="stat-label">Accuracy</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">5K+</span>
+                        <span class="stat-label">Messages Trained</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">Real-time</span>
+                        <span class="stat-label">Detection</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="floating-card card-1">
+                    <i class="fas fa-shield-alt"></i> Protected
+                </div>
+                <div class="floating-card card-2">
+                    <i class="fas fa-robot"></i> AI
+                </div>
+                <div class="floating-card card-3">
+                    <i class="fas fa-bolt"></i> Fast
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="main-section">
+    <div class="container">
+        <div class="section-header">
+            <h2>Check Your Message</h2>
+            <p>Paste or type the message you want to analyze</p>
+        </div>
+
+        <div class="checker-card">
+            <form method="POST" action="{{ url_for('main.index') }}" id="spamForm">
+                <div class="input-group">
+                    <textarea 
+                        name="message" 
+                        id="message" 
+                        class="message-input" 
+                        placeholder="Enter your message here..."
+                        rows="6"
+                    >{% if result %}{{ result.message }}{% endif %}</textarea>
+                    
+                    <div class="input-actions">
+                        <button type="button" class="btn btn-secondary" onclick="clearInput()">
+                            <i class="fas fa-times"></i> Clear
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="checkBtn">
+                            <i class="fas fa-search"></i> Check Message
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Loading Spinner -->
+            <div class="loading-spinner" id="loadingSpinner">
+                <div class="spinner"></div>
+                <p>Analyzing your message...</p>
+            </div>
+        </div>
+
+        <!-- Error Messages -->
+        {% if error %}
+        <div class="alert alert-error">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <!-- Results -->
+        {% if result %}
+        <div class="result-section {% if result.is_spam %}result-spam{% else %}result-ham{% endif %}">
+            <div class="result-header">
+                <div class="result-icon">
+                    {% if result.is_spam %}
+                        <i class="fas fa-exclamation-triangle"></i>
+                    {% else %}
+                        <i class="fas fa-check-circle"></i>
+                    {% endif %}
+                </div>
+                <div class="result-title">
+                    <h3>{% if result.is_spam %}🚨 Spam Detected!{% else %}✅ Not Spam{% endif %}</h3>
+                    <p>Confidence: <strong>{{ "%.1f"|format(result.probability * 100) }}%</strong></p>
+                </div>
+            </div>
+
+            <div class="result-body">
+                <div class="result-message">
+                    <h4>Your Message:</h4>
+                    <p>{{ result.message }}</p>
+                </div>
+
+                <div class="result-indicators">
+                    <h4>Spam Indicators Found:</h4>
+                    {% if result.indicators %}
+                        <div class="indicator-tags">
+                            {% for indicator in result.indicators %}
+                                <span class="indicator-tag">{{ indicator }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="no-indicators">✅ No obvious spam indicators found</p>
+                    {% endif %}
+                </div>
+
+                <div class="result-cleaned">
+                    <h4>Cleaned Message:</h4>
+                    <p class="cleaned-text">{{ result.cleaned_message }}</p>
+                </div>
+
+                <div class="result-progress">
+                    <div class="progress-bar-container">
+                        <div class="progress-label">
+                            <span>Spam Probability</span>
+                            <span>{{ "%.1f"|format(result.probability * 100) }}%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill {% if result.is_spam %}fill-spam{% else %}fill-ham{% endif %}" 
+                                 style="width: {{ '%.1f'|format(result.probability * 100) }}%;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-action">
+                    {% if result.is_spam %}
+                        <div class="action-box action-danger">
+                            <i class="fas fa-shield-alt"></i>
+                            <div>
+                                <strong>Recommended Action:</strong>
+                                <p>Delete this message and report it as spam. Do not click on any links.</p>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="action-box action-success">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>Recommended Action:</strong>
+                                <p>This message appears safe. You can read it normally.</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Example Messages -->
+        <div class="examples-section">
+            <h3>Try These Examples</h3>
+            <div class="example-grid">
+                <div class="example-card" onclick="fillExample(this)">
+                    <span class="example-badge spam-badge">Spam</span>
+                    <p>"Congratulations! You've won a free iPhone! Click here to claim your prize now!"</p>
+                    <span class="example-hint"><i class="fas fa-hand-pointer"></i> Click to try</span>
+                </div>
+                <div class="example-card" onclick="fillExample(this)">
+                    <span class="example-badge ham-badge">Ham</span>
+                    <p>"Hey, are you coming to the party tonight? Let me know what time you'll be there."</p>
+                    <span class="example-hint"><i class="fas fa-hand-pointer"></i> Click to try</span>
+                </div>
+                <div class="example-card" onclick="fillExample(this)">
+                    <span class="example-badge spam-badge">Spam</span>
+                    <p>"URGENT: Your bank account has been compromised. Verify your details immediately or your account will be locked."</p>
+                    <span class="example-hint"><i class="fas fa-hand-pointer"></i> Click to try</span>
+                </div>
+                <div class="example-card" onclick="fillExample(this)">
+                    <span class="example-badge ham-badge">Ham</span>
+                    <p>"Please review the attached document before our meeting tomorrow at 2 PM."</p>
+                    <span class="example-hint"><i class="fas fa-hand-pointer"></i> Click to try</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function fillExample(card) {
+    const message = card.querySelector('p').textContent;
+    document.getElementById('message').value = message;
+    document.getElementById('message').focus();
+    // Scroll to the message input
+    document.getElementById('message').scrollIntoView({ behavior: 'smooth' });
+}
+
+function clearInput() {
+    document.getElementById('message').value = '';
+    document.getElementById('message').focus();
+}
+</script>
+{% endblock %}
