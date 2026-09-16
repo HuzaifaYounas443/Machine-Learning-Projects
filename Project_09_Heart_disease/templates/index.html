@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Heart Disease Predictor</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <!-- Google Font: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <!-- Separate CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="logo-area">
+            <i class="fas fa-heartbeat logo-icon"></i>
+            <div class="logo-text">Heart<span>Predict</span></div>
+        </div>
+        <div class="nav-links">
+            <a href="#" class="active"><i class="fas fa-home"></i> Home</a>
+            <a href="#"><i class="fas fa-chart-line"></i> Predict</a>
+            <a href="#"><i class="fas fa-envelope"></i> Contact</a>
+            <a href="#" class="btn-primary"><i class="fas fa-rocket"></i> Get Started</a>
+        </div>
+    </header>
+
+    <!-- Main container -->
+    <div class="container">
+        <div class="hero">
+            <h1><i class="fas fa-heart"></i> Heart Disease Predictor</h1>
+            <p>Empowering you with data-driven insights to understand your cardiovascular health. Input your health metrics below to access your risk and take proactive steps today.</p>
+        </div>
+
+        <div class="card-grid">
+            <!-- Left: Form -->
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-clipboard-list"></i> Health Metrics
+                </div>
+
+                <!-- Error message -->
+                {% if error %}
+                    <div class="error-msg">
+                        <i class="fas fa-exclamation-circle"></i> {{ error }}
+                    </div>
+                {% endif %}
+
+                <form id="predictForm" method="POST" action="/predict">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="age">Age</label>
+                            <input type="number" id="age" name="age" placeholder="e.g. 52" value="52" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="sex">Sex</label>
+                            <select id="sex" name="sex">
+                                <option value="1">Male</option>
+                                <option value="0">Female</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="cp">Chest Pain Type</label>
+                            <select id="cp" name="cp">
+                                <option value="0">Typical angina</option>
+                                <option value="1">Atypical angina</option>
+                                <option value="2">Non-anginal pain</option>
+                                <option value="3">Asymptomatic</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="trestbps">Resting BP (mm Hg)</label>
+                            <input type="number" id="trestbps" name="trestbps" placeholder="e.g. 125" value="125" required />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="chol">Cholesterol (mg/dl)</label>
+                            <input type="number" id="chol" name="chol" placeholder="e.g. 212" value="212" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="fbs">Fasting Blood Sugar</label>
+                            <select id="fbs" name="fbs">
+                                <option value="0">≤ 120 mg/dl</option>
+                                <option value="1">> 120 mg/dl</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="restecg">Resting ECG</label>
+                            <select id="restecg" name="restecg">
+                                <option value="0">Normal</option>
+                                <option value="1">ST-T wave abnormality</option>
+                                <option value="2">Left ventricular hypertrophy</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="thalach">Max Heart Rate</label>
+                            <input type="number" id="thalach" name="thalach" placeholder="e.g. 168" value="168" required />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="exang">Exercise Induced Angina</label>
+                            <select id="exang" name="exang">
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="oldpeak">ST Depression (oldpeak)</label>
+                            <input type="number" id="oldpeak" name="oldpeak" placeholder="e.g. 1.0" step="0.1" value="1.0" required />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="slope">Slope</label>
+                            <select id="slope" name="slope">
+                                <option value="0">Upsloping</option>
+                                <option value="1">Flat</option>
+                                <option value="2">Downsloping</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="ca">Major Vessels (0–4)</label>
+                            <input type="number" id="ca" name="ca" placeholder="e.g. 2" value="2" min="0" max="4" required />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="thal">Thalassemia</label>
+                            <select id="thal" name="thal">
+                                <option value="1">Normal</option>
+                                <option value="2">Fixed defect</option>
+                                <option value="3">Reversible defect</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-heartbeat"></i> Predict Risk
+                    </button>
+                </form>
+            </div>
+
+            <!-- Right: Result Panel & Heart Diagram -->
+            <div class="card result-panel">
+                <div class="card-title">
+                    <i class="fas fa-chart-pie"></i> Probability Distribution
+                </div>
+
+                {% if prediction is defined and prediction is not none %}
+                    <!-- Show result -->
+                    <div class="risk-badge 
+                        {% if prediction < 0.4 %} low 
+                        {% elif prediction < 0.65 %} moderate 
+                        {% else %} high {% endif %}">
+                        <div class="icon">
+                            {% if prediction < 0.4 %}
+                                <i class="fas fa-check-circle" style="color:#2b8c5e;"></i>
+                            {% elif prediction < 0.65 %}
+                                <i class="fas fa-exclamation-triangle" style="color:#e67e22;"></i>
+                            {% else %}
+                                <i class="fas fa-times-circle" style="color:#e63946;"></i>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <div class="label">Risk Score</div>
+                            <div style="font-weight:600; font-size:0.9rem; color:#3a4a5e;">
+                                {{ "%.1f"|format(prediction * 100) }}%
+                            </div>
+                        </div>
+                        <div class="value">
+                            {% if prediction < 0.4 %} Low
+                            {% elif prediction < 0.65 %} Moderate
+                            {% else %} High {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="stats-mini">
+                        <div class="stat-item">
+                            <div class="stat-label">Probability</div>
+                            <div class="stat-value">{{ "%.2f"|format(prediction) }}</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Risk Level</div>
+                            <div class="stat-value 
+                                {% if prediction < 0.4 %} green
+                                {% elif prediction < 0.65 %} 
+                                    {% if prediction >= 0.4 and prediction < 0.65 %} 
+                                        style="color:#e67e22;"
+                                    {% endif %}
+                                {% else %} red{% endif %}">
+                                {% if prediction < 0.4 %} Low
+                                {% elif prediction < 0.65 %} Moderate
+                                {% else %} High {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <!-- Placeholder when no prediction -->
+                    <div class="risk-badge" style="background:#f1f5f9;">
+                        <div class="icon"><i class="fas fa-heart" style="color:#e63946;"></i></div>
+                        <div>
+                            <div class="label">Status</div>
+                            <div style="font-weight:600; color:#3a4a5e;">Awaiting input</div>
+                        </div>
+                        <div class="value" style="font-size:1rem; color:#6a7a8e;">—</div>
+                    </div>
+                    <div class="stats-mini">
+                        <div class="stat-item">
+                            <div class="stat-label">Probability</div>
+                            <div class="stat-value" style="color:#aab5c5;">—</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Risk Level</div>
+                            <div class="stat-value" style="color:#aab5c5;">—</div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Heart Diagram -->
+                <div class="heart-diagram">
+                    <i class="fas fa-heart"></i>
+                    <p>
+                        {% if prediction is defined and prediction is not none %}
+                            {{ "%.1f"|format(prediction * 100) }}% risk probability
+                        {% else %}
+                            Enter your metrics to see your risk
+                        {% endif %}
+                    </p>
+                </div>
+
+                <!-- Probability bar (visual) -->
+                <div style="margin-top: 0.5rem;">
+                    <div style="display:flex; justify-content:space-between; font-size:0.7rem; color:#6a7a8e; margin-bottom:0.2rem;">
+                        <span>0%</span>
+                        <span>50%</span>
+                        <span>100%</span>
+                    </div>
+                    <div style="height:8px; background:#e2e8f0; border-radius:20px; overflow:hidden;">
+                        <div id="riskProgressBar"
+                             class="risk-progress-bar"
+                             data-prediction="{{ prediction if prediction is defined and prediction is not none else 0 }}">
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align:right; font-size:0.7rem; color:#6a7a8e; margin-top:0.2rem;">
+                    {% if prediction is defined and prediction is not none %}
+                        {{ "%.1f"|format(prediction * 100) }}%
+                    {% else %}
+                        —
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-note">
+            <i class="fas fa-shield-alt" style="margin-right:6px;"></i> Your data is processed securely. This tool is for educational purposes only.
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const bar = document.getElementById('riskProgressBar');
+            if (!bar) return;
+
+            const prediction = Number(bar.dataset.prediction || 0);
+            const width = Math.max(0, Math.min(prediction * 100, 100));
+            bar.style.width = width + '%';
+        });
+    </script>
+</body>
+</html>
