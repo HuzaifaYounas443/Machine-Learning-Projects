@@ -1,0 +1,149 @@
+<!-- templates/about.html -->
+{% extends 'base.html' %}
+
+{% block title %}About - Pneumonia Detection{% endblock %}
+
+{% block content %}
+<div class="about-section">
+    <div class="about-card">
+        <h1 class="about-title">About PneumoScan</h1>
+        
+        <div class="about-content">
+            <div class="about-description">
+                <h2>What is Pneumonia?</h2>
+                <p>Pneumonia is an infection that inflames the air sacs in one or both lungs. The air sacs may fill with fluid or pus, causing cough with phlegm or pus, fever, chills, and difficulty breathing.</p>
+            </div>
+            
+            <div class="about-description">
+                <h2>How Our System Works</h2>
+                <p>PneumoScan uses a deep learning model trained on thousands of chest X-ray images to detect signs of pneumonia. The model analyzes patterns in the X-ray that might indicate infection.</p>
+            </div>
+            
+            <div class="about-description">
+                <h2>Technology Stack</h2>
+                <ul class="tech-list">
+                    <li>TensorFlow & Keras - Deep Learning Framework</li>
+                    <li>VGG16 - Pre-trained CNN Architecture</li>
+                    <li>Flask - Web Framework</li>
+                    <li>Python - Programming Language</li>
+                </ul>
+            </div>
+            
+            <div class="about-description">
+                <h2>Model Performance</h2>
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <h3>89.26%</h3>
+                        <p>Accuracy</p>
+                    </div>
+                    <div class="metric-box">
+                        <h3>93.77%</h3>
+                        <p>Precision</p>
+                    </div>
+                    <div class="metric-box">
+                        <h3>88.72%</h3>
+                        <p>Recall</p>
+                    </div>
+                    <div class="metric-box">
+                        <h3>95.67%</h3>
+                        <p>AUC</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="disclaimer-box">
+                <h3>Disclaimer</h3>
+                <p>This tool is for educational and research purposes only. It should not be used as a substitute for professional medical advice, diagnosis, or treatment.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .about-section {
+        padding: 3rem 2rem;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .about-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+    }
+    
+    .about-title {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: #2d3748;
+    }
+    
+    .about-description {
+        margin-bottom: 2rem;
+    }
+    
+    .about-description h2 {
+        color: #2b6cb0;
+        margin-bottom: 0.5rem;
+    }
+    
+    .about-description p {
+        color: #4a5568;
+        line-height: 1.6;
+    }
+    
+    .tech-list {
+        list-style-type: none;
+        padding: 0;
+    }
+    
+    .tech-list li {
+        padding: 0.5rem 0;
+        color: #4a5568;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    
+    .metric-box {
+        background: #f7fafc;
+        padding: 1rem;
+        border-radius: 8px;
+        text-align: center;
+    }
+    
+    .metric-box h3 {
+        color: #2b6cb0;
+        font-size: 1.5rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .metric-box p {
+        color: #4a5568;
+        font-size: 0.9rem;
+    }
+    
+    .disclaimer-box {
+        background: #fff5f5;
+        border: 1px solid #f56565;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-top: 2rem;
+    }
+    
+    .disclaimer-box h3 {
+        color: #9b2c2c;
+        margin-bottom: 0.5rem;
+    }
+    
+    .disclaimer-box p {
+        color: #742a2a;
+    }
+</style>
+{% endblock %}

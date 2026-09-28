@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Pneumonia Detection{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="main-title">Pneumonia Detection System</h1>
+    <p class="subtitle">Upload chest X-ray for analysis</p>
+
+    <div class="upload-box">
+        <form action="/predict" method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".jpg,.jpeg,.png" required class="file-input">
+            <button type="submit" class="predict-btn">Analyze X-Ray</button>
+        </form>
+    </div>
+
+    <div class="info-cards">
+        <div class="card">
+            <h3>🔬 AI Powered</h3>
+            <p>Deep learning model</p>
+        </div>
+        <div class="card">
+            <h3>⚡ Fast Results</h3>
+            <p>Instant analysis</p>
+        </div>
+        <div class="card">
+            <h3>🎯 High Accuracy</h3>
+            <p>89% accuracy</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

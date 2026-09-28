@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Result - Pneumonia Detection{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="main-title">Analysis Result</h1>
+    
+    <div class="result-box">
+        <img src="{{ url_for('static', filename=image_path) }}" alt="X-Ray" class="xray-img">
+        
+        <div class="result-details">
+            <h2 class="diagnosis {{ 'normal' if result == 'NORMAL' else 'pneumonia' }}">
+                {{ result }}
+            </h2>
+            <p class="confidence">Confidence: {{ "%.2f"|format(confidence) }}%</p>
+            
+            <div class="progress-bar">
+                <div class="progress {{ 'normal' if result == 'NORMAL' else 'pneumonia' }}" 
+                     style="width: {{ confidence }}%"></div>
+            </div>
+            
+            <a href="/" class="back-btn">Analyze Another Image</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
