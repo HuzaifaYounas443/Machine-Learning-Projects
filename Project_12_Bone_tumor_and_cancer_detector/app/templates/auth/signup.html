@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Create Account{% endblock %}
+
+{% block content %}
+<div class="auth-shell">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <h1>Create Your Account</h1>
+      <p>Register to start running diagnostic analyses</p>
+    </div>
+
+    <form method="POST" novalidate>
+      {{ form.hidden_tag() }}
+
+      <div class="form-group">
+        {{ form.full_name.label }}
+        {{ form.full_name(placeholder="Dr. Jane Smith") }}
+        {% for error in form.full_name.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+      </div>
+
+      <div class="form-group">
+        {{ form.email.label }}
+        {{ form.email(placeholder="you@hospital.com") }}
+        {% for error in form.email.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          {{ form.password.label }}
+          {{ form.password(placeholder="Min. 8 characters") }}
+          {% for error in form.password.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="form-group">
+          {{ form.confirm_password.label }}
+          {{ form.confirm_password(placeholder="Re-enter password") }}
+          {% for error in form.confirm_password.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+        </div>
+      </div>
+
+      {{ form.submit(class="btn btn-primary btn-block") }}
+    </form>
+
+    <div class="auth-switch">
+      Already have an account? <a href="{{ url_for('auth.login') }}">Sign in</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>Dashboard</h1>
+    <div class="subtitle">Overview of all diagnostic activity</div>
+  </div>
+  <a href="{{ url_for('main.new_scan') }}" class="btn btn-primary">New Analysis</a>
+</div>
+
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="stat-label">Total Scans</div>
+    <div class="stat-value">{{ stats.total_scans }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Total Patients</div>
+    <div class="stat-value">{{ stats.total_patients }}</div>
+  </div>
+  <div class="stat-card accent-malignant">
+    <div class="stat-label">Malignant Cases</div>
+    <div class="stat-value">{{ stats.malignant_count }}</div>
+  </div>
+  <div class="stat-card accent-benign">
+    <div class="stat-label">Benign Cases</div>
+    <div class="stat-value">{{ stats.benign_count }}</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">Recent Scans</div>
+
+  {% if recent_scans %}
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Patient</th>
+        <th>Tumor Status</th>
+        <th>Classification</th>
+        <th>Confidence</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for scan in recent_scans %}
+      <tr>
+        <td>{{ scan.created_at.strftime('%b %d, %Y %H:%M') }}</td>
+        <td><a href="{{ url_for('main.patient_detail', patient_id=scan.patient.id) }}">{{ scan.patient.name }}</a></td>
+        <td>
+          {% if scan.tumor_detected %}
+            <span class="badge badge-malignant">Tumor Detected</span>
+          {% else %}
+            <span class="badge badge-benign">No Tumor</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if scan.classification == 'Malignant' %}
+            <span class="badge badge-malignant">Malignant</span>
+          {% elif scan.classification == 'Benign' %}
+            <span class="badge badge-benign">Benign</span>
+          {% else %}
+            <span class="badge badge-neutral">N/A</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if scan.classification_confidence %}
+            {{ "%.1f"|format(scan.classification_confidence * 100) }}%
+          {% else %}
+            {{ "%.1f"|format(scan.tumor_confidence * 100) }}%
+          {% endif %}
+        </td>
+        <td><a href="{{ url_for('main.result', scan_id=scan.id) }}">View</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">No scans have been analyzed yet. Start with a new analysis.</div>
+  {% endif %}
+</div>
+{% endblock %}

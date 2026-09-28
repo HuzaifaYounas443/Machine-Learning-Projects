@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Bone Tumor Analysis{% endblock %} · OsteoScan</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="app-shell">
+    {% if current_user.is_authenticated %}
+    <header class="topbar">
+      <div class="brand">OsteoScan <span>Diagnostic Suite</span></div>
+      <nav>
+        <a href="{{ url_for('main.dashboard') }}" class="{{ 'active' if request.endpoint == 'main.dashboard' }}">Dashboard</a>
+        <a href="{{ url_for('main.new_scan') }}" class="{{ 'active' if request.endpoint == 'main.new_scan' }}">New Analysis</a>
+        <a href="{{ url_for('main.history') }}" class="{{ 'active' if request.endpoint == 'main.history' }}">History</a>
+        <span class="user-info">{{ current_user.full_name }}</span>
+        <a href="{{ url_for('auth.logout') }}">Sign Out</a>
+      </nav>
+    </header>
+    {% endif %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      <div class="flash-list">
+        {% for category, message in messages %}
+          <div class="flash flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    {% endwith %}
+
+    <main class="main-content">
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+      OsteoScan Diagnostic Suite &middot; Clinical decision support tool &middot; {{ current_year }}
+    </footer>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

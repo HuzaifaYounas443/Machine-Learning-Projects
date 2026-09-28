@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Scan History{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>Scan History</h1>
+    <div class="subtitle">All analyses recorded in the system</div>
+  </div>
+  <a href="{{ url_for('main.new_scan') }}" class="btn btn-primary">New Analysis</a>
+</div>
+
+<div class="card">
+  {% if scans %}
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Patient ID</th>
+        <th>Patient</th>
+        <th>Tumor Status</th>
+        <th>Classification</th>
+        <th>Analyzed By</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for scan in scans %}
+      <tr>
+        <td>{{ scan.created_at.strftime('%b %d, %Y %H:%M') }}</td>
+        <td>{{ scan.patient.patient_code }}</td>
+        <td><a href="{{ url_for('main.patient_detail', patient_id=scan.patient.id) }}">{{ scan.patient.name }}</a></td>
+        <td>
+          {% if scan.tumor_detected %}
+            <span class="badge badge-malignant">Tumor Detected</span>
+          {% else %}
+            <span class="badge badge-benign">No Tumor</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if scan.classification == 'Malignant' %}
+            <span class="badge badge-malignant">Malignant</span>
+          {% elif scan.classification == 'Benign' %}
+            <span class="badge badge-benign">Benign</span>
+          {% else %}
+            <span class="badge badge-neutral">N/A</span>
+          {% endif %}
+        </td>
+        <td>{{ scan.clinician.full_name }}</td>
+        <td><a href="{{ url_for('main.result', scan_id=scan.id) }}">View</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">No scans recorded yet.</div>
+  {% endif %}
+</div>
+{% endblock %}

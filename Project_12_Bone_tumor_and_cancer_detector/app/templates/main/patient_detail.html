@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}{{ patient.name }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>{{ patient.name }}</h1>
+    <div class="subtitle">Patient ID: {{ patient.patient_code }}</div>
+  </div>
+  <a href="{{ url_for('main.new_scan') }}" class="btn btn-primary">New Analysis</a>
+</div>
+
+<div class="result-grid">
+  <div class="card">
+    <div class="card-title">Patient Information</div>
+    <div class="info-row"><span class="label">Age</span><span class="value">{{ patient.age or "—" }}</span></div>
+    <div class="info-row"><span class="label">Gender</span><span class="value">{{ patient.gender or "—" }}</span></div>
+    <div class="info-row"><span class="label">Registered</span><span class="value">{{ patient.created_at.strftime('%b %d, %Y') }}</span></div>
+    <div class="info-row"><span class="label">Total Scans</span><span class="value">{{ patient.scan_count }}</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Scan History</div>
+    {% if patient.scans %}
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Tumor Status</th>
+          <th>Classification</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for scan in patient.scans %}
+        <tr>
+          <td>{{ scan.created_at.strftime('%b %d, %Y %H:%M') }}</td>
+          <td>
+            {% if scan.tumor_detected %}
+              <span class="badge badge-malignant">Tumor Detected</span>
+            {% else %}
+              <span class="badge badge-benign">No Tumor</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if scan.classification == 'Malignant' %}
+              <span class="badge badge-malignant">Malignant</span>
+            {% elif scan.classification == 'Benign' %}
+              <span class="badge badge-benign">Benign</span>
+            {% else %}
+              <span class="badge badge-neutral">N/A</span>
+            {% endif %}
+          </td>
+          <td><a href="{{ url_for('main.result', scan_id=scan.id) }}">View</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">No scans recorded for this patient yet.</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

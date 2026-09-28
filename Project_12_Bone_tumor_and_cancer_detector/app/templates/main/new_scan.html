@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}New Analysis{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>New Analysis</h1>
+    <div class="subtitle">Upload an X-ray and enter patient details to run detection and classification</div>
+  </div>
+</div>
+
+<div id="scanning-panel" class="scanning-panel" role="status" aria-live="polite" hidden>
+  <div class="scanning-spinner" aria-hidden="true"></div>
+  <div>
+    <strong>Scanning image...</strong>
+    <div class="text-muted text-small">The models are analyzing the X-ray. Results will appear shortly.</div>
+  </div>
+</div>
+
+<form method="POST" enctype="multipart/form-data" id="scan-form">
+  {{ form.hidden_tag() }}
+
+  <div class="result-grid">
+    <div class="card">
+      <div class="card-title">X-Ray Image</div>
+      <div class="form-group">
+        {{ form.image.label }}
+        {{ form.image(id="image") }}
+        {% for error in form.image.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+        <div class="field-hint">Accepted formats: JPG, PNG. The image is preprocessed automatically before analysis.</div>
+      </div>
+      <img id="image-preview" src="" alt="Preview" style="display:none; width:100%; border-radius:6px; margin-top:10px; border:1px solid var(--color-border);">
+    </div>
+
+    <div class="card">
+      <div class="card-title">Patient Information</div>
+
+      <div class="form-group">
+        {{ form.patient_code.label }}
+        {{ form.patient_code(placeholder="e.g. PT-00001") }}
+        {% for error in form.patient_code.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          {{ form.patient_name.label }}
+          {{ form.patient_name(placeholder="Full name") }}
+          {% for error in form.patient_name.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="form-group">
+          {{ form.age.label }}
+          {{ form.age(placeholder="Years") }}
+          {% for error in form.age.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        {{ form.gender.label }}
+        {{ form.gender() }}
+        {% for error in form.gender.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+      </div>
+
+      <div class="form-group">
+        {{ form.notes.label }}
+        {{ form.notes(placeholder="Relevant clinical history, symptoms, or observations...") }}
+        {% for error in form.notes.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+      </div>
+
+      {{ form.submit(class="btn btn-primary btn-block") }}
+    </div>
+  </div>
+</form>
+{% endblock %}

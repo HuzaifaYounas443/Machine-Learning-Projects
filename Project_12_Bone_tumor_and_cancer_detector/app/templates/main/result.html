@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}Scan Result{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>Analysis Result</h1>
+    <div class="subtitle">Scan #{{ scan.id }} &middot; {{ scan.created_at.strftime('%b %d, %Y %H:%M') }}</div>
+  </div>
+  <a href="{{ url_for('main.new_scan') }}" class="btn btn-secondary">New Analysis</a>
+</div>
+
+{% if not scan.tumor_detected %}
+  <div class="verdict-banner verdict-clear">
+    <h2>No Tumor Detected</h2>
+    <div class="verdict-sub">Stage 1 model confidence: {{ "%.1f"|format(scan.tumor_confidence * 100) }}%</div>
+  </div>
+{% elif scan.classification == 'Malignant' %}
+  <div class="verdict-banner verdict-malignant">
+    <h2>Tumor Detected &middot; Malignant</h2>
+    <div class="verdict-sub">Classification confidence: {{ "%.1f"|format(scan.classification_confidence * 100) }}%</div>
+  </div>
+{% else %}
+  <div class="verdict-banner verdict-benign">
+    <h2>Tumor Detected &middot; Benign</h2>
+    <div class="verdict-sub">Classification confidence: {{ "%.1f"|format(scan.classification_confidence * 100) }}%</div>
+  </div>
+{% endif %}
+
+<div class="result-grid">
+  <div>
+    <div class="card">
+      <div class="card-title">Patient</div>
+      <div class="info-row"><span class="label">Name</span><span class="value">{{ scan.patient.name }}</span></div>
+      <div class="info-row"><span class="label">Patient ID</span><span class="value">{{ scan.patient.patient_code }}</span></div>
+      <div class="info-row"><span class="label">Age</span><span class="value">{{ scan.patient.age or "—" }}</span></div>
+      <div class="info-row"><span class="label">Gender</span><span class="value">{{ scan.patient.gender or "—" }}</span></div>
+      <div class="info-row"><span class="label">Analyzed By</span><span class="value">{{ scan.clinician.full_name }}</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Detection Confidence</div>
+
+      <div class="confidence-block">
+        <div class="confidence-label">
+          <span>Tumor Presence</span>
+          <span>{{ "%.1f"|format(scan.tumor_confidence * 100) }}%</span>
+        </div>
+        <div class="confidence-bar-track">
+          <div class="confidence-bar-fill" style="width: {{ (scan.tumor_confidence * 100)|round(1) }}%;"></div>
+        </div>
+      </div>
+
+      {% if scan.tumor_detected and scan.classification_confidence %}
+      <div class="confidence-block">
+        <div class="confidence-label">
+          <span>{{ scan.classification }} Classification</span>
+          <span>{{ "%.1f"|format(scan.classification_confidence * 100) }}%</span>
+        </div>
+        <div class="confidence-bar-track">
+          <div class="confidence-bar-fill {{ 'malignant' if scan.classification == 'Malignant' else 'benign' }}"
+               style="width: {{ (scan.classification_confidence * 100)|round(1) }}%;"></div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    {% if scan.notes %}
+    <div class="card">
+      <div class="card-title">Clinical Notes</div>
+      <p class="text-small">{{ scan.notes }}</p>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <div class="card-title">Imaging & Grad-CAM Visualization</div>
+    <div class="image-grid">
+      <div class="image-tile">
+        <img src="{{ url_for('static', filename='uploads/' + scan.original_image) }}" alt="Original X-ray">
+        <div class="image-caption">Original X-Ray</div>
+      </div>
+
+      {% if scan.tumor_gradcam %}
+      <div class="image-tile">
+        <img src="{{ url_for('static', filename='results/' + scan.tumor_gradcam) }}" alt="Tumor detection Grad-CAM">
+        <div class="image-caption">Grad-CAM &middot; Tumor Detection ({{ "%.1f"|format(scan.tumor_confidence * 100) }}%)</div>
+      </div>
+      {% endif %}
+
+      {% if scan.classification_gradcam %}
+      <div class="image-tile">
+        <img src="{{ url_for('static', filename='results/' + scan.classification_gradcam) }}" alt="Classification Grad-CAM">
+        <div class="image-caption">Grad-CAM &middot; {{ scan.classification }} Classification ({{ "%.1f"|format(scan.classification_confidence * 100) }}%)</div>
+      </div>
+      {% endif %}
+    </div>
+
+    <hr class="section-divider">
+    <p class="text-muted text-small">
+      Grad-CAM highlights the regions of the X-ray that most influenced the model's prediction.
+      Warmer colors (red/yellow) indicate areas of higher attention. This tool is intended to
+      support, not replace, clinical judgment.
+    </p>
+  </div>
+</div>
+{% endblock %}
